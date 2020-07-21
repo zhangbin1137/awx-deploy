@@ -1,0 +1,4 @@
+---
+- name: common os level config
+  hosts: all
+  tasks:

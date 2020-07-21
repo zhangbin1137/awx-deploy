@@ -1,0 +1,110 @@
+---
+- name: common os level config
+  hosts: all
+  tasks:
+# file: roles/common/tasks/common_oslevel.yml
+
+  - name: Check security setting for core file size limitation
+    shell: grep -q "^\*.*-.*core" /etc/security/limits.conf >/dev/null 2>&1
+    ignore_errors: yes
+    register: coresize_check
+    changed_when: coresize_check.rc in [0,1,2]
+    failed_when: coresize_check.rc not in [0,1,2]
+
+  - name: Configure security limitation for core file size
+    lineinfile:
+      dest: /etc/security/limits.conf
+      backup: yes
+      insertafter: "EOF"
+      line: "*       -       core    unlimited"
+    when: coresize_check.rc != 0
+
+  - name: Enable YUM REPOes
+    shell: yum-config-manager --enable base
+    ignore_errors: yes
+
+  - name: Check env_keep in sudoers for SSB related
+    shell: grep -q "SSB_HOME SQS_MMR_CONTROL  EC2_REGION  AWS_DOMAIN  AWS_ACCOUNT_NUMBER  AWS_ACCESS_KEYID  AWS_SECRET_ACCESS_KEY KINESIS_REGION AWS_KINESIS_ACCESS_KEYID AWS_KINESIS_SECRET_ACCESS_KEY CLOUDWATCH_REGION AWS_CLOUDWATCH_ACCESS_KEYID AWS_CLOUDWATCH_SECRET_ACCESS_KEY AWS_CLOUDWATCH_DOMAIN AWS_KINESIS_DOMAIN ZOOM_COMMAND_URL" /etc/sudoers >/dev/null 2>&1
+    register: sudo_check
+    changed_when: sudo_check.rc in [0,1]
+    failed_when: sudo_check.rc not in [0,1]
+    ignore_errors: yes
+
+  - name: Configure sudoers for privilege
+    replace:
+      dest: /etc/sudoers
+      backup: yes
+      regexp: "{{ item.name }}"
+      replace: "{{ item.value }}"
+    with_items:
+      - { name: '^# %wheel.*NOPASSWD.*$', value: "%wheel  ALL=(ALL)       NOPASSWD: ALL" }
+      - { name: '^Defaults.*requiretty$', value: "#Defaults    requiretty" }
+
+  - block:
+      - name: Configure sudoers to delete SSB related env_keep
+        lineinfile:
+          dest: /etc/sudoers
+          backup: yes
+          state: absent
+          regexp: 'Defaults.*SSB_HOME.*'
+
+
+      - name: Configure sudoers for env_keep items
+        replace:
+          dest: /etc/sudoers
+          regexp: "{{ item.name }}"
+          replace: "{{ item.value }}"
+        with_items:
+          - { name: '^Defaults.*XAUTHORITY.*$', value: "Defaults    env_keep += \"LC_TIME LC_ALL LANGUAGE LINGUAS _XKB_CHARSET XAUTHORITY\"\nDefaults    env_keep += \"SSB_HOME SQS_MMR_CONTROL  EC2_REGION  AWS_DOMAIN  AWS_ACCOUNT_NUMBER  AWS_ACCESS_KEYID  AWS_SECRET_ACCESS_KEY KINESIS_REGION AWS_KINESIS_ACCESS_KEYID AWS_KINESIS_SECRET_ACCESS_KEY CLOUDWATCH_REGION AWS_CLOUDWATCH_ACCESS_KEYID AWS_CLOUDWATCH_SECRET_ACCESS_KEY AWS_CLOUDWATCH_DOMAIN AWS_KINESIS_DOMAIN ZOOM_COMMAND_URL\"" }
+    when: sudo_check.rc != 0
+
+  - block:
+      - name: Enable and start crond service in aws servers
+        service:
+          name: crond
+          enabled: yes
+          state: started
+      - name: Disable iptables in cis image
+        service:
+          name: iptables
+          enabled: no
+          state: stopped
+        when: CLUSTER is defined and CLUSTER == 'us03'
+    when: AWS_VM is defined and instance_seq is not defined
+
+  - name: Install and configure ntpd
+    block:
+      - name: Install ntpd
+        package:
+          name: ntp
+          state: present
+
+      - name: Checking ntpd process
+        shell: pgrep ntpd >/dev/null 2>&1
+        ignore_errors: yes 
+        register: ntpd_check
+        changed_when: ntpd_check.rc in [0,1]
+        failed_when: ntpd_check.rc not in [0,1]
+
+      - name: Enable and start ntpd service
+        service:
+          name: ntpd
+          enabled: yes
+          state: restarted
+        when: ntpd_check.rc != 0
+    when: ansible_distribution_major_version == 7
+
+  - name: Install and configure chronyd
+    block:
+      - name: Install chronyd
+        package:
+          name: chrony
+          state: present
+
+      - name: Enable and start chronyd service
+        service:
+          name: chronyd
+          enabled: yes
+          state: started
+    when: ansible_distribution_major_version == 8
+
