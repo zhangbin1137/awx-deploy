@@ -1,5 +1,5 @@
 ---
-- name: common reatime svr
+- name: copybin reatime svr
   hosts: all
   tasks:
-    - debug: msg="start common reatime svr"
+    - debug: msg="start copybin reatime svr"
