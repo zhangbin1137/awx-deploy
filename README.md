@@ -1,1 +1,1 @@
-# awx-deply
+# awx-deploy
