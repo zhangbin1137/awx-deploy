@@ -2,7 +2,7 @@
 - name: common os level config
   hosts: all
   become: yes
-  become_user: sudo
+  # become_user: sudo
   tasks:
 # file: roles/common/tasks/common_oslevel.yml
     - debug: msg="start common os level config task!!!"
