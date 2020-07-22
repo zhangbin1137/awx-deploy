@@ -1,10 +1,12 @@
 ---
 - name: common os level config
   hosts: all
+  become: yes
+  become_user: sudo
   tasks:
 # file: roles/common/tasks/common_oslevel.yml
     - debug: msg="start common os level config task!!!"
-    
+
     - name: Check security setting for core file size limitation
       shell: grep -q "^\*.*-.*core" /etc/security/limits.conf >/dev/null 2>&1
       ignore_errors: yes
