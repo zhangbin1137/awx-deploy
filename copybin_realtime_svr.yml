@@ -5,6 +5,7 @@
   tasks:
     - debug: msg="start copybin reatime svr"
 
-    - local_action: stat path=/opt/tmp/{{newpkg}}
+    - local_action: stat path=/opt/tmp/"{{newpkg}}"
       register: newpkg_exist
-      debug: msg="{{newpkg_exist.stdout}}"
+
+    - debug: msg="{{newpkg_exist.stdout}}"
