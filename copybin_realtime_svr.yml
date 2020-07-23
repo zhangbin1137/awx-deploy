@@ -14,7 +14,7 @@
           mkdir /opt/tmp/
           chmod 755 /opt/tmp/
         fi
-      delegate_to: localhost
+      delegate_to: 127.0.0.1
 
     # - local_action: stat path=/opt/tmp/"{{newpkg}}"
     #   register: newpkg_exist
