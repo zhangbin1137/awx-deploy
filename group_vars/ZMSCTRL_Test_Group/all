@@ -4,6 +4,7 @@ MMZ: CN01_SH_ZMS
 
 location: sh
 servertype: zmsc
+test_var: just a group var testing,hahahaha!!!
 
 newpkg: zmsctrl_1.0.87.0715.692b6cac
 pkgversion: 1.0.87.0715.692b6cac
