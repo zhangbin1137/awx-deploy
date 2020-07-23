@@ -5,6 +5,16 @@
   tasks:
     - debug: msg="start copybin reatime svr"
 
+    - name: check whether there is a tmp folder in local
+      shell: |
+        if test -d /opt/tmp/ 
+        then 
+          echo "already have tmp folder" 
+        else
+          mkdir /opt/tmp/
+        fi
+      delegate_to: localhost
+
     - local_action: stat path=/opt/tmp/"{{newpkg}}"
       register: newpkg_exist
 
@@ -12,8 +22,6 @@
 
     - name: Defining general s3 objects
       local_action: set_fact object_path="/release/{{ servertype }}/{{ server_ver }}/{{ newpkg }}"
-      tags: download_s3file
-      when: object_path is not defined
 
     - local_action: aws_s3 bucket=zoom-op object={{ item.S }} dest=/opt/tmp/{{ item.D }} mode=get aws_access_key={{ aws_access_key }} aws_secret_key={{ aws_secret_key }} region=us-east-1 overwrite=false profile={{ s3_profile|default('') }}
       with_items:
