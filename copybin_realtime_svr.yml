@@ -8,26 +8,26 @@
     - name: check whether there is a tmp folder in local
       local_action: shell if test -d /opt/tmp;then echo "already have tmp folder";else mkdir /opt/tmp/ && chmod 777 /opt/tmp/;fi
 
-    - local_action: stat path=/opt/tmp/"{{newpkg}}"
-      register: newpkg_exist
+    # - local_action: stat path=/opt/tmp/"{{newpkg}}"
+    #   register: newpkg_exist
 
-    - debug: msg="{{newpkg_exist.stat.exists}}"
+    # - debug: msg="{{newpkg_exist.stat.exists}}"
 
-    - name: Defining general s3 objects
-      local_action: set_fact object_path="/release/{{ servertype }}/{{ server_ver }}/{{ newpkg }}"
+    # - name: Defining general s3 objects
+    #   local_action: set_fact object_path="/release/{{ servertype }}/{{ server_ver }}/{{ newpkg }}"
 
-    - local_action: aws_s3 bucket=zoom-op object={{ item.S }} dest=/opt/tmp/{{ item.D }} mode=get aws_access_key={{ aws_access_key }} aws_secret_key={{ aws_secret_key }} region=us-east-1 overwrite=false profile={{ s3_profile|default('') }}
-      with_items:
-        - { S: "{{ object_path }}", D: "{{ newpkg }}" }
-        - { S: "{{ object_path }}.sha256", D: "{{ newpkg }}.sha256" }
-      when: newpkg_exist.stat.exists == False
+    # - local_action: aws_s3 bucket=zoom-op object={{ item.S }} dest=/opt/tmp/{{ item.D }} mode=get aws_access_key={{ aws_access_key }} aws_secret_key={{ aws_secret_key }} region=us-east-1 overwrite=false profile={{ s3_profile|default('') }}
+    #   with_items:
+    #     - { S: "{{ object_path }}", D: "{{ newpkg }}" }
+    #     - { S: "{{ object_path }}.sha256", D: "{{ newpkg }}.sha256" }
+    #   when: newpkg_exist.stat.exists == False
 
-    - local_action: file path=/opt/tmp/{{ newpkg }} mode=0744
+    # - local_action: file path=/opt/tmp/{{ newpkg }} mode=0744
 
-    - local_action: shell cd /opt/tmp; sha256sum -c "{{ newpkg }}".sha256 2>/dev/null | grep -q "{{ newpkg }}"':'" OK" && /opt/tmp/"{{ newpkg }}" -v 2>&1 | grep -v 'local hostname'; cd - >/dev/null
-      register: newpkg_ver
+    # - local_action: shell cd /opt/tmp; sha256sum -c "{{ newpkg }}".sha256 2>/dev/null | grep -q "{{ newpkg }}"':'" OK" && /opt/tmp/"{{ newpkg }}" -v 2>&1 | grep -v 'local hostname'; cd - >/dev/null
+    #   register: newpkg_ver
 
-    - debug: msg="[{{ dest_bin | basename | upper }}] {{ newpkg_ver.stdout }} successfully downloaded"
+    # - debug: msg="[{{ dest_bin | basename | upper }}] {{ newpkg_ver.stdout }} successfully downloaded"
 
-    - debug: msg="Judge {{ newpkg }} is downloaded success or not"
-      failed_when: pkgversion not in newpkg_ver.stdout
+    # - debug: msg="Judge {{ newpkg }} is downloaded success or not"
+    #   failed_when: pkgversion not in newpkg_ver.stdout
