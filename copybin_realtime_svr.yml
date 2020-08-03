@@ -6,13 +6,7 @@
     - debug: msg="start copybin reatime svr"
 
     - name: check whether there is a tmp folder in local
-      delegate_to: 127.0.0.1
-      shell: |
-        if test -d /opt/tmp
-        then
-          echo "already have tmp folder"
-        else
-          mkdir /opt/tmp/ && chmod 777 /opt/tmp/;fi
+      local_action: shell if test -d /opt/tmp;then echo "already have tmp folder";else mkdir /opt/tmp/ && chmod 777 /opt/tmp/;fi;
 
     # - local_action: stat path=/opt/tmp/"{{newpkg}}"
     #   register: newpkg_exist
