@@ -1,9 +1,6 @@
 ---
 - name: init zm svr prep
   hosts: all
-<<<<<<< HEAD
   become: yes
-=======
->>>>>>> 1ffe2a0279a8c1e4f556fc86cb5eb418291c3775
   tasks:
-    - debug: msg="start init zm svr prep task"
+    - debug: msg="start init_zm_svr_prep task"
