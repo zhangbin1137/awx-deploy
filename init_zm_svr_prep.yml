@@ -1,0 +1,6 @@
+---
+- name: init zm svr prep
+  hosts: all
+  become: yes
+  tasks:
+    - debug: msg="start init zm svr prep task"

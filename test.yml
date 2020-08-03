@@ -1,0 +1,6 @@
+---
+- name: A test yml script
+  hosts: all
+  become: yes
+  tasks:
+    - debug: msg="{{test_var}}"

@@ -1,0 +1,5 @@
+---
+- name: upgrade realtime svrcfg
+  hosts: all
+  tasks:
+    - debug: msg="start upgrade realtime svrcfg task"

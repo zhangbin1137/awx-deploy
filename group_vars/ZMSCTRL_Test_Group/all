@@ -1,0 +1,42 @@
+---
+REGION: CN01_SH
+MMZ: CN01_SH_ZMS
+
+location: sh
+servertype: zmsc
+test_var: just a group var testing,hahahaha!!!
+
+newpkg: zmsctrl_1.0.87.0715.692b6cac
+pkgversion: 1.0.87.0715.692b6cac
+server_ver: 1.0
+
+force_upgrd: graceful
+force_restart: graceful
+#default_restart: False
+default_restart: True
+defaultzmsc_restart: True
+
+backup_ans: yes
+dest_bin: /opt/ssb/bin/zmsctrl
+lsn_port: ":5060$|:5061$|:1720$|:443$"
+#lsn_port: ":8801$|:443$"
+ownership: zoomapp
+groupship: zoomapp
+filemode: 0644
+#FIP: 162.255.38.10
+#FIP_MASK: 25
+#-#AWS_REGION: us-east-1
+SSB_HOME: /opt/ssb
+#AWS_DOMAIN: ".amazonaws.com.cn"
+#AWS_ACCOUNT_NUMBER: 020352566030
+SQS_MMR_CONTROL: reserved
+ZOOM_COMMAND_URL: cn01command.zoom.com.cn
+#-#KINESIS_REGION: us-east-1
+#-#CLOUDWATCH_REGION: us-east-1
+#NIC: eth0
+AWS_REGION: cn-central-1
+KINESIS_REGION: cn-central-1
+CLOUDWATCH_REGION: cn-central-1
+SQS_REGION: cn-central-1
+SNS_REGION: cn-central-1
+CLUSTER: cn01

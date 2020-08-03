@@ -1,0 +1,51 @@
+---
+MMC: cn01_zoomcomcn
+REGION: CN01_SH
+MMZ: CN01_SH_ZMS
+ZONE_TYPE: "ZMSZ"
+LocalBridgeID: CNTB
+
+ZMSC1: 58.33.99.36
+ZMSC2: 120.253.251.36
+WEBURL: cn01www3.zoom.com.cn
+CCTRL_ZONE:
+   - 52.80.101.153
+   - 52.80.101.216
+   - 52.80.102.142
+STATUS: 1
+
+location: sh
+servertype: zms
+
+newpkg: zms_1.0.772.0709.18b508b8.tar.gz
+pkgversion: 18b508b8
+server_ver: 1.0
+
+force_upgrd: graceful
+force_restart: graceful
+default_restart: True
+defaultzmsc_restart: False
+
+backup_ans: yes
+dest_bin: /opt/ssb/bin/zmssignal
+dest_cfg: /opt/ssb/conf/ssb.cfg
+#lsn_port: ":5060$|:5061$|:1720$|:443$"
+#lsn_port: ":8801$|:443$"
+ownership: zoomapp
+groupship: zoomapp
+filemode: 0644
+#-#AWS_REGION: us-east-1
+SSB_HOME: /opt/ssb
+#AWS_DOMAIN: ".amazonaws.com.cn"
+#AWS_ACCOUNT_NUMBER: 020352566030
+SQS_MMR_CONTROL: reserved
+ZOOM_COMMAND_URL: cn01command.zoom.com.cn
+#-#KINESIS_REGION: us-east-1
+#-#CLOUDWATCH_REGION: us-east-1
+#NIC: eth0
+AWS_REGION: cn-central-1
+KINESIS_REGION: cn-central-1
+CLOUDWATCH_REGION: cn-central-1
+SQS_REGION: cn-central-1
+SNS_REGION: cn-central-1
+CLUSTER: cn01
