@@ -6,7 +6,7 @@
     - debug: msg="start copybin reatime svr"
 
     - name: check whether there is a tmp folder in local
-      delegate_to: tools-master
+      delegate_to: 127.0.0.1
       shell: |
         if test -d /opt/tmp
         then
