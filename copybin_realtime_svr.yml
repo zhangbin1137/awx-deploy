@@ -7,6 +7,9 @@
 
     - name: check whether there is a tmp folder in local
       local_action: shell if test -d /opt/tmp;then echo "already have tmp folder";else mkdir /opt/tmp/ && chmod 777 /opt/tmp/;fi;
+      register: check_tmp_dir
+
+    - debug: msg="{{check_tmp_dir.stdout}}"
 
     # - local_action: stat path=/opt/tmp/"{{newpkg}}"
     #   register: newpkg_exist
